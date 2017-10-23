@@ -2,7 +2,6 @@ extern crate xsalsa20;
 
 #[cfg(test)]
 mod tests {
-    use xsalsa20::*;
     use xsalsa20::salsa20::*;
     use xsalsa20::hsalsa20::*;
 
@@ -21,6 +20,6 @@ mod tests {
         let c = Salsa20::salsa20_expansion_256(k0, k1, n);
         // Perform hsalsa20/20 -> 256-bit output key
         let r1 = HSalsa20::hsalsa20(c);
-        assert_eq!(bytes_eq(r1.to_vec(), test_r1), true);
+        assert_eq!(r1.to_vec().eq(&test_r1), true);
     }
 }

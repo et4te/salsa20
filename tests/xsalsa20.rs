@@ -3,12 +3,12 @@ extern crate rustc_serialize;
 
 #[cfg(test)]
 mod tests {
-    use xsalsa20::*;
     use xsalsa20::xsalsa20::*;
     use rustc_serialize::hex::FromHex;
 
+    // Source: pycrypto
     #[test]
-    fn test_xsalsa20_encrypt_256() {
+    fn test_pycrypto_xsalsa20() {
         let key = "a6a7251c1e72916d11c2cb214d3c252539121d8e234e652d651fa4c8cff88030"
             .from_hex()
             .expect("Failed to decode hex string.");
@@ -35,7 +35,7 @@ mod tests {
 
         let rs = XSalsa20::xsalsa20_20_256(k0, k1, v, plaintext.clone());
 
-        assert_eq!(bytes_eq(rs.to_vec(), ciphertext), true);
+        assert_eq!(rs.to_vec().eq(&ciphertext), true);
     }
 
     #[test]

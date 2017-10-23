@@ -154,7 +154,7 @@ mod tests {
         ];
         let expansion = Salsa20::salsa20_expansion_256(k0, k1, n);
         let r1 = Salsa20::salsa20(expansion);
-        assert_eq!(bytes_eq(r1.to_vec(), test_v1), true);
+        assert_eq!(r1.to_vec().eq(&test_v1), true);
     }
 
     #[test]
@@ -174,9 +174,9 @@ mod tests {
             0x39, 0x49, 0xB5, 0x95, 0x85, 0x74, 0x21, 0x81, 0xA5, 0xA7, 0x60, 0x22, 0x3A, 0xFA, 0x22, 0xD4,
         ];
         // encrypted message
-        assert_eq!(bytes_eq(d1, test_s1_xor_digest), true);
+        assert_eq!(d1.eq(&test_s1_xor_digest), true);
         // decrypted message
-        assert_eq!(bytes_eq(m, m1), true);
+        assert_eq!(m.eq(&m1), true);
     }
 
     #[test]
@@ -197,9 +197,9 @@ mod tests {
             0x4E, 0xC4, 0xD5, 0x95, 0xE8, 0x52, 0x25, 0xF0, 0x8E, 0x2B, 0xC0, 0x3F, 0xE1, 0xC4, 0x25, 0x67,
         ];
         // encrypted message
-        assert_eq!(bytes_eq(d1, test_s1_xor_digest), true);
+        assert_eq!(d1.eq(&test_s1_xor_digest), true);
         // decrypted message
-        assert_eq!(bytes_eq(m, m1), true);
+        assert_eq!(m.eq(&m1), true);
     }
 
 }
