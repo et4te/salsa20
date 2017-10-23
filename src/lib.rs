@@ -4,44 +4,49 @@ pub mod salsa20;
 pub mod hsalsa20;
 pub mod xsalsa20;
 
+// Generates code for the conversion of bytes to an integral type in little
+// endian format.
+macro_rules! little_endian {
+    ($type:ty, $arr:expr, $nbytes:expr) => {
+        {
+            let mut r: $type = $arr[0] as $type;
+            for i in 1..$nbytes {
+                r += ($arr[i] as $type) << (8 * i);
+            }
+            r
+        }
+    }
+}
+
+// Generates code for the conversion of an integral type to bytes in little
+// endian format.
+macro_rules! little_endian_inv {
+    ($x:expr, $nbytes:expr) => {
+        {
+            let mut b: [u8; $nbytes] = [0; $nbytes];
+            b[0] = ($x & 0xFF) as u8;
+            for i in 1..$nbytes {
+                b[i] = (($x & (0xFF << i * 8)) >> i * 8) as u8;
+            }
+            b
+        }
+    }
+}
+
 pub fn little_endian(b: [u8; 4]) -> u32 {
-    b[0] as u32 + ((b[1] as u32) << 8) + ((b[2] as u32) << 16) + ((b[3] as u32) << 24)
+    little_endian!(u32, b, 4)
 }
 
 pub fn little_endian_u64(b: [u8; 8]) -> u64 {
-    b[0] as u64 + ((b[1] as u64) << 8) + ((b[2] as u64) << 16) + ((b[3] as u64) << 24) +
-        ((b[4] as u64) << 32) + ((b[5] as u64) << 40) + ((b[6] as u64) << 48) + ((b[7] as u64) << 56)
+    little_endian!(u64, b, 8)
 }
 
 pub fn little_endian_inv(x: u32) -> [u8; 4] {
-    let mut bytes: [u8; 4] = [0; 4];
-    bytes[0] = (x & 0xFF) as u8;
-    for i in 1..4 {
-        bytes[i] = ((x & (0xFF << i * 8)) >> i * 8) as u8;
-    }
-    bytes
+    little_endian_inv!(x, 4)
 }
 
 pub fn little_endian_inv64(x: u64) -> [u8; 8] {
-    let mut bytes: [u8; 8] = [0; 8];
-    bytes[0] = (x & 0xFF) as u8;
-    for i in 1..8 {
-        bytes[i] = ((x & (0xFF << i * 8)) >> i * 8) as u8;
-    }
-    bytes
-}
-
-pub fn bytes_eq(v1: Vec<u8>, v2: Vec<u8>) -> bool {
-    if v1.len() != v2.len() {
-        false
-    } else {
-        for i in 0..v1.len() {
-            if v1[i] != v2[i] {
-                return false;
-            }
-        }
-        true
-    }
+    little_endian_inv!(x, 8)
 }
 
 pub fn xor_digest(enc: Vec<u8>) -> Vec<u8> {
