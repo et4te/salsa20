@@ -6,7 +6,7 @@ mod tests {
     use xsalsa20::hsalsa20::*;
 
     #[test]
-    fn test_hsalsa20_expansion_256() {
+    fn test_hsalsa20() {
         let k0 = [ 0x4a,0x5d,0x9d,0x5b,0xa4,0xce,0x2d,0xe1
                    , 0x72,0x8e,0x3b,0xf4,0x80,0x35,0x0f,0x25];
         let k1 = [ 0xe0,0x7e,0x21,0xc9,0x47,0xd1,0x9e,0x33
@@ -17,7 +17,7 @@ mod tests {
                             , 0x60,0x09,0x54,0x9e,0xac,0x64,0x74,0xf2
                             , 0x06,0xc4,0xee,0x08,0x44,0xf6,0x83,0x89];
         // Generate salsa constant for HSalsa
-        let c = Salsa20::salsa20_expansion_256(k0, k1, n);
+        let c = Salsa20::expand32(k0, k1, n);
         // Perform hsalsa20/20 -> 256-bit output key
         let r1 = HSalsa20::hsalsa20(c);
         assert_eq!(r1.to_vec().eq(&test_r1), true);
